@@ -30,9 +30,9 @@ public:
 	 * @param[in]  resolution  The resolution
 	 * @param[in]  frame_rate  The frame rate
 	 */
-	StereoCamera(int resolution, double frame_rate): frame_rate_(30.0) {
+	StereoCamera(int device_id, int resolution, double frame_rate): frame_rate_(30.0) {
 
-		camera_ = new cv::VideoCapture(0);
+		camera_ = new cv::VideoCapture(device_id);
 		cv::Mat raw;
 		cv::Mat left_image;
 		cv::Mat right_image;
@@ -127,16 +127,17 @@ public:
 		ros::NodeHandle nh;
 		ros::NodeHandle private_nh("~");
 		// get ros param
+		private_nh.param("device_id", device_id_, 1);
 		private_nh.param("resolution", resolution_, 1);
 		private_nh.param("frame_rate", frame_rate_, 30.0);
-		private_nh.param("config_file_location", config_file_location_, std::string("~/SN1267.conf"));
+		private_nh.param("config_file_location", config_file_location_, std::string("~/SN11819.conf"));
 		private_nh.param("left_frame_id", left_frame_id_, std::string("left_camera"));
 		private_nh.param("right_frame_id", right_frame_id_, std::string("right_camera"));
 		private_nh.param("show_image", show_image_, false);
 		private_nh.param("load_zed_config", load_zed_config_, true);
 
 		ROS_INFO("Try to initialize the camera");
-		StereoCamera zed(resolution_, frame_rate_);
+		StereoCamera zed(device_id_, resolution_, frame_rate_);
 		ROS_INFO("Initialized the camera");
 
 		// setup publisher stuff
@@ -250,7 +251,7 @@ public:
 		double r_k1 = pt.get<double>(right_str + reso_str + ".k1");
 		double r_k2 = pt.get<double>(right_str + reso_str + ".k2");
 		// conver mm to m
-		double baseline = pt.get<double>("STEREO.BaseLine") * 0.001;
+		double baseline = pt.get<double>("STEREO.Baseline") * 0.001;
 		// get Rx and Rz
 		double rx = pt.get<double>("STEREO.RX_"+reso_str);
 		double rz = pt.get<double>("STEREO.RZ_"+reso_str);
@@ -366,6 +367,7 @@ public:
 	}
 
 private:
+	int device_id_;	
 	int resolution_;
 	double frame_rate_;
 	bool show_image_, load_zed_config_;
