@@ -251,7 +251,7 @@ public:
 		double r_k1 = pt.get<double>(right_str + reso_str + ".k1");
 		double r_k2 = pt.get<double>(right_str + reso_str + ".k2");
 		// conver mm to m
-		double baseline = pt.get<double>("STEREO.Baseline") * 0.001;
+		double baseline = pt.get<double>("STEREO.BaseLine") * 0.001;
 		// get Rx and Rz
 		double rx = pt.get<double>("STEREO.RX_"+reso_str);
 		double rz = pt.get<double>("STEREO.RZ_"+reso_str);
@@ -358,9 +358,13 @@ public:
 	 * @param[in]  t             { parameter_description }
 	 */
 	void publishImage(cv::Mat img, image_transport::Publisher &img_pub, std::string img_frame_id, ros::Time t) {
+		// Convert to rgb
+		cv::Mat img_rgb;
+		cv::cvtColor(img, img_rgb, CV_BGR2RGB); 
+		// Create the image
 		cv_bridge::CvImage cv_image;
-		cv_image.image = img;
-		cv_image.encoding = sensor_msgs::image_encodings::BGR8;
+		cv_image.image = img_rgb;
+		cv_image.encoding = sensor_msgs::image_encodings::RGB8;
 		cv_image.header.frame_id = img_frame_id;
 		cv_image.header.stamp = t;
 		img_pub.publish(cv_image.toImageMsg());

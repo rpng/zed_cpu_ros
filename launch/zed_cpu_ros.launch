@@ -1,5 +1,5 @@
 <launch>
-<arg name="config_file_location" default="$(find zed_cpu_ros)/config/SN11819.conf"/>
+<arg name="config_file_location" default="$(find zed_cpu_ros)/config/SN13705.conf"/>
 <arg name="camera_namespace" default="camera"/>
 
 <node pkg="zed_cpu_ros" type="zed_cpu_ros" name="zed_cpu_ros_node" output="screen" ns="$(arg camera_namespace)">
@@ -13,7 +13,7 @@
 	<param name="load_zed_config" value="true"/>
 </node>
 
-<node pkg="tf" type="static_transform_publisher" name="static_tf_1" args="0.25 0 0.4 0 0 0 1 base_link left_frame 30"/>
+<!-- <node pkg="tf" type="static_transform_publisher" name="static_tf_1" args="0.25 0 0.4 0 0 0 1 base_link left_frame 30"/> -->
 <!-- <node pkg="tf" type="static_transform_publisher" name="static_tf_2" args="0 0.120 0 0 0 0 1 left_frame right_frame 30"/> -->
 
 </launch>
